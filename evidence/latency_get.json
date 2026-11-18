@@ -1,0 +1,7 @@
+{
+  "calls": 20,
+  "average_ms": 78.2,
+  "min_ms": 35.2,
+  "max_ms": 213.6,
+  "invoices_returned": 26
+}

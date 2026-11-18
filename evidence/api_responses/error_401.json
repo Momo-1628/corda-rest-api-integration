@@ -1,0 +1,19 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "http://localhost:10050/api/invoices",
+    "body": null
+  },
+  "status": 401,
+  "response": {
+    "success": false,
+    "data": null,
+    "error": {
+      "status": 401,
+      "code": "UNAUTHORIZED",
+      "message": "Invalid API key",
+      "details": null
+    },
+    "timestamp": "2026-11-18T18:39:58.675263800Z"
+  }
+}

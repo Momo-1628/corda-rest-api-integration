@@ -1,0 +1,36 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "http://localhost:10050/api/invoices",
+    "body": {
+      "invoiceNo": "INV-000941-B",
+      "buyer": "O=BuyerCorp,L=Bengaluru,C=IN",
+      "amount": 48250.5,
+      "currency": "INR",
+      "description": "Annual maintenance contract - Q1",
+      "dueDate": "2026-12-31"
+    }
+  },
+  "status": 201,
+  "response": {
+    "success": true,
+    "data": {
+      "txHash": "041A7D09AA2ECCE5E65BECD644FD09FFB0C441CEDA92A0DB95959B5A20E1D5CF",
+      "linearId": "2448d600-3ab9-4468-b1aa-278f3781045b",
+      "invoice": {
+        "linearId": "2448d600-3ab9-4468-b1aa-278f3781045b",
+        "invoiceNo": "INV-000941-B",
+        "seller": "O=SellerCorp, L=Mumbai, C=IN",
+        "buyer": "O=BuyerCorp, L=Bengaluru, C=IN",
+        "amount": 48250.5,
+        "currency": "INR",
+        "description": "Annual maintenance contract - Q1",
+        "dueDate": "2026-12-31",
+        "status": "ISSUED",
+        "remarks": null
+      }
+    },
+    "error": null,
+    "timestamp": "2026-11-18T18:39:51.110775600Z"
+  }
+}

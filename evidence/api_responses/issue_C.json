@@ -1,0 +1,36 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "http://localhost:10050/api/invoices",
+    "body": {
+      "invoiceNo": "INV-000941-C",
+      "buyer": "O=BuyerCorp,L=Bengaluru,C=IN",
+      "amount": 9999.99,
+      "currency": "INR",
+      "description": "Office furniture (wrong quantity)",
+      "dueDate": "2026-12-31"
+    }
+  },
+  "status": 201,
+  "response": {
+    "success": true,
+    "data": {
+      "txHash": "702305DAEC81105A139F139F025110D830B5C3BB37FE70F3697BF86BF0D36ABA",
+      "linearId": "838ca93b-9ffa-4803-b52f-bcf46495a609",
+      "invoice": {
+        "linearId": "838ca93b-9ffa-4803-b52f-bcf46495a609",
+        "invoiceNo": "INV-000941-C",
+        "seller": "O=SellerCorp, L=Mumbai, C=IN",
+        "buyer": "O=BuyerCorp, L=Bengaluru, C=IN",
+        "amount": 9999.99,
+        "currency": "INR",
+        "description": "Office furniture (wrong quantity)",
+        "dueDate": "2026-12-31",
+        "status": "ISSUED",
+        "remarks": null
+      }
+    },
+    "error": null,
+    "timestamp": "2026-11-18T18:39:51.775323300Z"
+  }
+}

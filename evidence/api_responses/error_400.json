@@ -1,0 +1,28 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "http://localhost:10050/api/invoices",
+    "body": {
+      "invoiceNo": "INV-000941-X",
+      "buyer": "O=BuyerCorp,L=Bengaluru,C=IN",
+      "amount": -500,
+      "currency": "INR",
+      "description": "negative amount",
+      "dueDate": "2026-12-31"
+    }
+  },
+  "status": 400,
+  "response": {
+    "success": false,
+    "data": null,
+    "error": {
+      "status": 400,
+      "code": "VALIDATION_FAILED",
+      "message": "Request validation failed",
+      "details": [
+        "amount: amount must be greater than 0"
+      ]
+    },
+    "timestamp": "2026-11-18T18:39:58.706045700Z"
+  }
+}

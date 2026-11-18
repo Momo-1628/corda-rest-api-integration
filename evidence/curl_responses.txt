@@ -1,0 +1,225 @@
+
+$ curl -s http://localhost:10050/api/health
+{
+    "success": true,
+    "data": {
+        "status": "UP",
+        "node": "O=SellerCorp, L=Mumbai, C=IN",
+        "nodeTime": "2026-11-18T18:40:10.389554600Z"
+    },
+    "error": null,
+    "timestamp": "2026-11-18T18:40:10.393083800Z"
+}
+
+$ curl -s -H X-API-KEY: *** http://localhost:10050/api/me
+{
+    "success": true,
+    "data": {
+        "name": "O=SellerCorp, L=Mumbai, C=IN",
+        "organisation": "SellerCorp",
+        "locality": "Mumbai",
+        "country": "IN",
+        "platformVersion": 140
+    },
+    "error": null,
+    "timestamp": "2026-11-18T18:40:10.489778500Z"
+}
+
+$ curl -s -H X-API-KEY: *** http://localhost:10050/api/peers
+{
+    "success": true,
+    "data": {
+        "peers": [
+            "O=BuyerCorp, L=Bengaluru, C=IN"
+        ]
+    },
+    "error": null,
+    "timestamp": "2026-11-18T18:40:10.721813500Z"
+}
+
+$ curl -s -H X-API-KEY: *** http://localhost:10050/api/notaries
+{
+    "success": true,
+    "data": {
+        "notaries": [
+            "O=Notary, L=London, C=GB"
+        ]
+    },
+    "error": null,
+    "timestamp": "2026-11-18T18:40:10.898952600Z"
+}
+
+$ curl -s -X POST http://localhost:10050/api/invoices -d {"invoiceNo":"INV-CURL-001011",...}
+{
+    "success": true,
+    "data": {
+        "txHash": "D6ECCA8486208A768C3A53CADABD12067AC817B3FF26FFAAEDB11F73FFE3E1E3",
+        "linearId": "8242fe1f-dc70-4fae-8628-fd920e03050e",
+        "invoice": {
+            "linearId": "8242fe1f-dc70-4fae-8628-fd920e03050e",
+            "invoiceNo": "INV-CURL-001011",
+            "seller": "O=SellerCorp, L=Mumbai, C=IN",
+            "buyer": "O=BuyerCorp, L=Bengaluru, C=IN",
+            "amount": 75000,
+            "currency": "INR",
+            "description": "curl demo invoice",
+            "dueDate": "2026-12-31",
+            "status": "ISSUED",
+            "remarks": null
+        }
+    },
+    "error": null,
+    "timestamp": "2026-11-18T18:40:11.835434100Z"
+}
+
+$ curl -s -H X-API-KEY: *** http://localhost:10060/api/invoices/8242fe1f-dc70-4fae-8628-fd920e03050e
+{
+    "success": true,
+    "data": {
+        "linearId": "8242fe1f-dc70-4fae-8628-fd920e03050e",
+        "invoiceNo": "INV-CURL-001011",
+        "seller": "O=SellerCorp, L=Mumbai, C=IN",
+        "buyer": "O=BuyerCorp, L=Bengaluru, C=IN",
+        "amount": 75000,
+        "currency": "INR",
+        "description": "curl demo invoice",
+        "dueDate": "2026-12-31",
+        "status": "ISSUED",
+        "remarks": null
+    },
+    "error": null,
+    "timestamp": "2026-11-18T18:40:12.279971100Z"
+}
+
+$ curl -s -X PUT http://localhost:10060/api/invoices/8242fe1f-dc70-4fae-8628-fd920e03050e/approve -d {"remarks":"Approved via curl"}
+{
+    "success": true,
+    "data": {
+        "txHash": "F94D0A0A9B66A24591910B1FC1D3E5AFE0599CF53787F8FB49DB0D50252A3D1D",
+        "linearId": "8242fe1f-dc70-4fae-8628-fd920e03050e",
+        "invoice": {
+            "linearId": "8242fe1f-dc70-4fae-8628-fd920e03050e",
+            "invoiceNo": "INV-CURL-001011",
+            "seller": "O=SellerCorp, L=Mumbai, C=IN",
+            "buyer": "O=BuyerCorp, L=Bengaluru, C=IN",
+            "amount": 75000,
+            "currency": "INR",
+            "description": "curl demo invoice",
+            "dueDate": "2026-12-31",
+            "status": "APPROVED",
+            "remarks": "Approved via curl"
+        }
+    },
+    "error": null,
+    "timestamp": "2026-11-18T18:40:13.068438100Z"
+}
+
+$ curl -s -X PUT http://localhost:10060/api/invoices/8242fe1f-dc70-4fae-8628-fd920e03050e/pay -d {"remarks":"UTR-CURL-001"}
+{
+    "success": true,
+    "data": {
+        "txHash": "5F2B14463B69682D1F793102B86BE39B8D2E26819C61F9A7D1F02AEA963B03FC",
+        "linearId": "8242fe1f-dc70-4fae-8628-fd920e03050e",
+        "invoice": {
+            "linearId": "8242fe1f-dc70-4fae-8628-fd920e03050e",
+            "invoiceNo": "INV-CURL-001011",
+            "seller": "O=SellerCorp, L=Mumbai, C=IN",
+            "buyer": "O=BuyerCorp, L=Bengaluru, C=IN",
+            "amount": 75000,
+            "currency": "INR",
+            "description": "curl demo invoice",
+            "dueDate": "2026-12-31",
+            "status": "PAID",
+            "remarks": "UTR-CURL-001"
+        }
+    },
+    "error": null,
+    "timestamp": "2026-11-18T18:40:14.182964300Z"
+}
+
+$ curl -s -H X-API-KEY: *** http://localhost:10050/api/invoices?status=PAID
+{
+    "success": true,
+    "data": [
+        {
+            "linearId": "ff2c069c-b469-4e16-9555-a4e8c000c774",
+            "invoiceNo": "INV-000941-A",
+            "seller": "O=SellerCorp, L=Mumbai, C=IN",
+            "buyer": "O=BuyerCorp, L=Bengaluru, C=IN",
+            "amount": 125000.0,
+            "currency": "INR",
+            "description": "50 units of industrial steel rods",
+            "dueDate": "2026-12-31",
+            "status": "PAID",
+            "remarks": "NEFT UTR HDFC0001234567"
+        },
+        {
+            "linearId": "8242fe1f-dc70-4fae-8628-fd920e03050e",
+            "invoiceNo": "INV-CURL-001011",
+            "seller": "O=SellerCorp, L=Mumbai, C=IN",
+            "buyer": "O=BuyerCorp, L=Bengaluru, C=IN",
+            "amount": 75000,
+            "currency": "INR",
+            "description": "curl demo invoice",
+            "dueDate": "2026-12-31",
+            "status": "PAID",
+            "remarks": "UTR-CURL-001"
+        }
+    ],
+    "error": null,
+    "timestamp": "2026-11-18T18:40:14.334100500Z"
+}
+
+$ curl -s -H X-API-KEY: *** http://localhost:10050/api/invoices/8242fe1f-dc70-4fae-8628-fd920e03050e/history
+{
+    "success": true,
+    "data": [
+        {
+            "version": 1,
+            "status": "ISSUED",
+            "remarks": null,
+            "txHash": "D6ECCA8486208A768C3A53CADABD12067AC817B3FF26FFAAEDB11F73FFE3E1E3",
+            "stateStatus": "CONSUMED",
+            "recordedTime": "2026-11-18T18:40:11.681175Z",
+            "consumedTime": "2026-11-18T18:40:13.003258Z"
+        },
+        {
+            "version": 2,
+            "status": "APPROVED",
+            "remarks": "Approved via curl",
+            "txHash": "F94D0A0A9B66A24591910B1FC1D3E5AFE0599CF53787F8FB49DB0D50252A3D1D",
+            "stateStatus": "CONSUMED",
+            "recordedTime": "2026-11-18T18:40:13.001749Z",
+            "consumedTime": "2026-11-18T18:40:14.096604Z"
+        },
+        {
+            "version": 3,
+            "status": "PAID",
+            "remarks": "UTR-CURL-001",
+            "txHash": "5F2B14463B69682D1F793102B86BE39B8D2E26819C61F9A7D1F02AEA963B03FC",
+            "stateStatus": "UNCONSUMED",
+            "recordedTime": "2026-11-18T18:40:14.093375Z",
+            "consumedTime": null
+        }
+    ],
+    "error": null,
+    "timestamp": "2026-11-18T18:40:14.564578100Z"
+}
+
+---------------- error cases ----------------
+
+$ curl -s -H X-API-KEY: wrong http://localhost:10050/api/invoices (expect 401)
+{"success":false,"data":null,"error":{"status":401,"code":"UNAUTHORIZED","message":"Invalid API key","details":null},"timestamp":"2026-11-18T18:40:14.751401500Z"}
+HTTP 401
+
+$ curl -s -X POST http://localhost:10050/api/invoices -d {"amount":0,...} (expect 400)
+{"success":false,"data":null,"error":{"status":400,"code":"VALIDATION_FAILED","message":"Request validation failed","details":["amount: amount must be greater than 0","currency: currency must be a 3-letter ISO code such as INR or USD"]},"timestamp":"2026-11-18T18:40:14.824141500Z"}
+HTTP 400
+
+$ curl -s -X PUT http://localhost:10060/api/invoices/8242fe1f-dc70-4fae-8628-fd920e03050e/approve (already PAID, expect 422)
+{"success":false,"data":null,"error":{"status":422,"code":"FLOW_FAILED","message":"Invoice INV-CURL-001011 must be ISSUED to move to APPROVED (current status: PAID).","details":null},"timestamp":"2026-11-18T18:40:14.948064300Z"}
+HTTP 422
+
+$ curl -s http://localhost:10060/api/invoices/00000000-0000-0000-0000-000000000000 (expect 404)
+{"success":false,"data":null,"error":{"status":404,"code":"INVOICE_NOT_FOUND","message":"No invoice found with linearId 00000000-0000-0000-0000-000000000000","details":null},"timestamp":"2026-11-18T18:40:15.019021600Z"}
+HTTP 404

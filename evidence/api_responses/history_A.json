@@ -1,0 +1,42 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "http://localhost:10050/api/invoices/ff2c069c-b469-4e16-9555-a4e8c000c774/history",
+    "body": null
+  },
+  "status": 200,
+  "response": {
+    "success": true,
+    "data": [
+      {
+        "version": 1,
+        "status": "ISSUED",
+        "remarks": null,
+        "txHash": "35D6B1228C7DBBC25806AE6C8C757DA85CC6C184B6D0931A9C5440BD345A20C7",
+        "stateStatus": "CONSUMED",
+        "recordedTime": "2026-11-18T18:39:48.499095Z",
+        "consumedTime": "2026-11-18T18:39:57.048224Z"
+      },
+      {
+        "version": 2,
+        "status": "APPROVED",
+        "remarks": "Goods received in good condition",
+        "txHash": "E3AF7AA995A3188EF21C5BA7838F5D42947A30EF79279687F98B89C7C8D124D1",
+        "stateStatus": "CONSUMED",
+        "recordedTime": "2026-11-18T18:39:57.032117Z",
+        "consumedTime": "2026-11-18T18:39:57.988116Z"
+      },
+      {
+        "version": 3,
+        "status": "PAID",
+        "remarks": "NEFT UTR HDFC0001234567",
+        "txHash": "945945448B3E2C6EE7D2FA357442F53C9E2DA712CB97AEAF65955488729484D4",
+        "stateStatus": "UNCONSUMED",
+        "recordedTime": "2026-11-18T18:39:57.983076Z",
+        "consumedTime": null
+      }
+    ],
+    "error": null,
+    "timestamp": "2026-11-18T18:40:00.319293900Z"
+  }
+}

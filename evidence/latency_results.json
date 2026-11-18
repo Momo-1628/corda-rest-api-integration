@@ -1,0 +1,116 @@
+{
+  "summary": {
+    "calls": 20,
+    "warmup_calls_excluded": 2,
+    "average_ms": 583.0,
+    "median_ms": 579.5,
+    "min_ms": 390.8,
+    "max_ms": 766.3,
+    "stdev_ms": 101.8,
+    "p90_ms": 712.5,
+    "throughput_tx_per_s": 1.72,
+    "measured_at": "2026-11-19T00:10:29"
+  },
+  "samples": [
+    {
+      "call": 1,
+      "ms": 751.2,
+      "txHash": "5C6406274D43986B193333C17F4379814F7007A3B1DF1EABB1B86B201D6542EC"
+    },
+    {
+      "call": 2,
+      "ms": 572.6,
+      "txHash": "15569DC5D51D626957F314B1B7A1F5C83AAB697E25783BED246C90A68CAF2992"
+    },
+    {
+      "call": 3,
+      "ms": 525.6,
+      "txHash": "1CFCE65F77B6E998D33C3E53D56F7AB4345126CA45F944550109C880C66B19F3"
+    },
+    {
+      "call": 4,
+      "ms": 676.2,
+      "txHash": "537B941DEDB64319BA060186277B176A4B4F900888C69E4D04DF998F83F6E985"
+    },
+    {
+      "call": 5,
+      "ms": 607.3,
+      "txHash": "C7736C9A2D843FCED46220AB673D392D992F7A5BACDD6E81F8C4597DA19D1A70"
+    },
+    {
+      "call": 6,
+      "ms": 442.1,
+      "txHash": "905EEC9A093537965FB6101AD591AB0686947DD49BAB5625A5622CF83BCF7981"
+    },
+    {
+      "call": 7,
+      "ms": 506.0,
+      "txHash": "2DD130FE8383AC60B1C424F03AC6D8FF82846BF256364292CEA7647BD8FA6EC0"
+    },
+    {
+      "call": 8,
+      "ms": 588.2,
+      "txHash": "DFF0B4369ECDDB6CD5E8809C3EA14E9134242A5A4672E40559E69284C7F2C3EC"
+    },
+    {
+      "call": 9,
+      "ms": 706.2,
+      "txHash": "4653F2808C8397F17B7EB8E3B3E1ED699D0C5359F1D8BA39B1BD0F923AC88ECA"
+    },
+    {
+      "call": 10,
+      "ms": 580.8,
+      "txHash": "A4D5B525FA861B881F378C545C5D243CE64CDFD1E1B3CE56DFA6E8296E773D4C"
+    },
+    {
+      "call": 11,
+      "ms": 488.4,
+      "txHash": "AEF89787150B2741299F3B94393FF48C13A698327ACF7E6C57032821D3F179E0"
+    },
+    {
+      "call": 12,
+      "ms": 583.8,
+      "txHash": "6AE62C84834121ACA2707C822A62427D91E438C9F09E22B7ECDAAC933DF0621E"
+    },
+    {
+      "call": 13,
+      "ms": 578.3,
+      "txHash": "E5FD73A4FBFDE8AC2338BF6D798B4F952943DE3886D7AD0FE9965617A46AFACD"
+    },
+    {
+      "call": 14,
+      "ms": 712.5,
+      "txHash": "071E91A420E52BF8F1D158A3EDDF66A4D55169409615227F2A4CD5598F7C8051"
+    },
+    {
+      "call": 15,
+      "ms": 533.3,
+      "txHash": "E94D56F4A819B90AEEC44534A728569B325D07702D0CEDC9925CFA7BE35D2B9D"
+    },
+    {
+      "call": 16,
+      "ms": 766.3,
+      "txHash": "EACE64B1F195483A21D5148C7F8E08255A571FD9F4ACA754CE4551D53ADB6E94"
+    },
+    {
+      "call": 17,
+      "ms": 390.8,
+      "txHash": "97FFE694F89E87EF8F4FFD9EA2AFF2E1313F8DBFCD4DE8B6AD21594AF0533CAE"
+    },
+    {
+      "call": 18,
+      "ms": 617.4,
+      "txHash": "B921C7C78225B43F67701DAF2B0F1D1DD8EDC0B35048B70E40C258BDCC919AE9"
+    },
+    {
+      "call": 19,
+      "ms": 461.7,
+      "txHash": "E5679AE0C9C79F7C1A4E0A769B01FFEB29DA225616D1638D0FA31C3C5EA9A88B"
+    },
+    {
+      "call": 20,
+      "ms": 571.9,
+      "txHash": "FB7C68E14B4D03A9D93D7B0091FB2F2A101C2924E47D00CDE3B73CE7344F309F"
+    }
+  ]
+}

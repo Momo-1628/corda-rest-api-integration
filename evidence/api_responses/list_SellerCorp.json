@@ -1,0 +1,51 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "http://localhost:10050/api/invoices",
+    "body": null
+  },
+  "status": 200,
+  "response": {
+    "success": true,
+    "data": [
+      {
+        "linearId": "ff2c069c-b469-4e16-9555-a4e8c000c774",
+        "invoiceNo": "INV-000941-A",
+        "seller": "O=SellerCorp, L=Mumbai, C=IN",
+        "buyer": "O=BuyerCorp, L=Bengaluru, C=IN",
+        "amount": 125000.0,
+        "currency": "INR",
+        "description": "50 units of industrial steel rods",
+        "dueDate": "2026-12-31",
+        "status": "PAID",
+        "remarks": "NEFT UTR HDFC0001234567"
+      },
+      {
+        "linearId": "2448d600-3ab9-4468-b1aa-278f3781045b",
+        "invoiceNo": "INV-000941-B",
+        "seller": "O=SellerCorp, L=Mumbai, C=IN",
+        "buyer": "O=BuyerCorp, L=Bengaluru, C=IN",
+        "amount": 48250.5,
+        "currency": "INR",
+        "description": "Annual maintenance contract - Q1",
+        "dueDate": "2026-12-31",
+        "status": "APPROVED",
+        "remarks": "Approved by finance"
+      },
+      {
+        "linearId": "838ca93b-9ffa-4803-b52f-bcf46495a609",
+        "invoiceNo": "INV-000941-C",
+        "seller": "O=SellerCorp, L=Mumbai, C=IN",
+        "buyer": "O=BuyerCorp, L=Bengaluru, C=IN",
+        "amount": 9999.99,
+        "currency": "INR",
+        "description": "Office furniture (wrong quantity)",
+        "dueDate": "2026-12-31",
+        "status": "REJECTED",
+        "remarks": "Wrong quantity delivered"
+      }
+    ],
+    "error": null,
+    "timestamp": "2026-11-18T18:40:00.539130100Z"
+  }
+}

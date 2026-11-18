@@ -1,0 +1,19 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "http://localhost:10060/api/invoices/7e002124-8fc7-46a1-8b32-4b8e341dab7f",
+    "body": null
+  },
+  "status": 404,
+  "response": {
+    "success": false,
+    "data": null,
+    "error": {
+      "status": 404,
+      "code": "INVOICE_NOT_FOUND",
+      "message": "No invoice found with linearId 7e002124-8fc7-46a1-8b32-4b8e341dab7f",
+      "details": null
+    },
+    "timestamp": "2026-11-18T18:39:59.139405500Z"
+  }
+}

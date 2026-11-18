@@ -1,0 +1,88 @@
+================================================================================================
+ EXTERNAL ERP CLIENT  ->  Corda Invoice REST API
+ Run at 2026-11-19T00:09:41   |   author: Suraj Patel (24BTRBT029)
+================================================================================================
+
+[1] Connectivity check
+  GET  SellerCorp /api/health                                                  -> HTTP 200  (47 ms)
+    [PASS] SellerCorp API is UP, node = O=SellerCorp, L=Mumbai, C=IN
+  GET  SellerCorp /api/me                                                      -> HTTP 200  (103 ms)
+    [PASS] /api/me -> O=SellerCorp, L=Mumbai, C=IN
+  GET  BuyerCorp  /api/health                                                  -> HTTP 200  (35 ms)
+    [PASS] BuyerCorp API is UP, node = O=BuyerCorp, L=Bengaluru, C=IN
+  GET  BuyerCorp  /api/me                                                      -> HTTP 200  (50 ms)
+    [PASS] /api/me -> O=BuyerCorp, L=Bengaluru, C=IN
+  GET  SellerCorp /api/peers                                                   -> HTTP 200  (175 ms)
+    [PASS] Seller sees peers ['O=BuyerCorp, L=Bengaluru, C=IN']
+  GET  SellerCorp /api/notaries                                                -> HTTP 200  (41 ms)
+    [PASS] Notaries ['O=Notary, L=London, C=GB']
+
+[2] Seller ERP issues 3 invoices (POST /api/invoices -> IssueInvoiceFlow)
+  POST SellerCorp /api/invoices                                                -> HTTP 201  (8401 ms)
+    [PASS] INV-000941-A issued, tx 35D6B1228C7DBBC2..., linearId ff2c069c-b469-4e16-9555-a4e8c000c774
+  POST SellerCorp /api/invoices                                                -> HTTP 201  (731 ms)
+    [PASS] INV-000941-B issued, tx 041A7D09AA2ECCE5..., linearId 2448d600-3ab9-4468-b1aa-278f3781045b
+  POST SellerCorp /api/invoices                                                -> HTTP 201  (666 ms)
+    [PASS] INV-000941-C issued, tx 702305DAEC81105A..., linearId 838ca93b-9ffa-4803-b52f-bcf46495a609
+
+[3] Buyer ERP sees the same invoices on its own node
+  GET  BuyerCorp  /api/invoices?status=ISSUED                                  -> HTTP 200  (1139 ms)
+    [PASS] all 3 new invoices are in BuyerCorp's vault with status ISSUED
+
+[4] Buyer ERP processes the invoices (PUT approve / pay / reject)
+  PUT  BuyerCorp  /api/invoices/ff2c069c-b469-4e16-9555-a4e8c000c774/approve   -> HTTP 200  (4448 ms)
+    [PASS] Invoice A -> APPROVED
+  PUT  BuyerCorp  /api/invoices/ff2c069c-b469-4e16-9555-a4e8c000c774/pay       -> HTTP 200  (677 ms)
+    [PASS] Invoice A -> PAID
+  PUT  BuyerCorp  /api/invoices/2448d600-3ab9-4468-b1aa-278f3781045b/approve   -> HTTP 200  (620 ms)
+    [PASS] Invoice B -> APPROVED (payment pending)
+
+[5] Error handling
+  GET  SellerCorp /api/invoices                                                -> HTTP 401  (11 ms)
+    [PASS] wrong API key -> 401 UNAUTHORIZED: Invalid API key
+  POST SellerCorp /api/invoices                                                -> HTTP 400  (36 ms)
+    [PASS] invalid amount -> 400 VALIDATION_FAILED: ['amount: amount must be greater than 0']
+  PUT  BuyerCorp  /api/invoices/838ca93b-9ffa-4803-b52f-bcf46495a609/pay       -> HTTP 422  (396 ms)
+    [PASS] paying an un-approved invoice -> 422 FLOW_FAILED: Invoice INV-000941-C must be APPROVED to move to PAID (current status: ISSUED).
+  GET  BuyerCorp  /api/invoices/7e002124-8fc7-46a1-8b32-4b8e341dab7f           -> HTTP 404  (32 ms)
+    [PASS] unknown linearId -> 404 INVOICE_NOT_FOUND
+  PUT  BuyerCorp  /api/invoices/838ca93b-9ffa-4803-b52f-bcf46495a609/reject    -> HTTP 200  (820 ms)
+    [PASS] Invoice C -> REJECTED
+
+[6] Audit trail of invoice A (GET /history)
+  GET  SellerCorp /api/invoices/ff2c069c-b469-4e16-9555-a4e8c000c774/history   -> HTTP 200  (360 ms)
++---+----------+------------+---------------------+----------------------------------+
+| v | status   | vault      | txHash              | remarks                          |
++---+----------+------------+---------------------+----------------------------------+
+| 1 | ISSUED   | CONSUMED   | 35D6B1228C7DBBC2... | -                                |
+| 2 | APPROVED | CONSUMED   | E3AF7AA995A3188E... | Goods received in good condition |
+| 3 | PAID     | UNCONSUMED | 945945448B3E2C6E... | NEFT UTR HDFC0001234567          |
++---+----------+------------+---------------------+----------------------------------+
+    [PASS] history = ISSUED -> APPROVED -> PAID
+
+[7] Invoices of this run as seen by each node
+  GET  SellerCorp /api/invoices                                                -> HTTP 200  (220 ms)
+  GET  BuyerCorp  /api/invoices                                                -> HTTP 200  (57 ms)
+
+  SellerCorp vault:
++--------------+----------------+----------+-------------+--------------------------+
+| invoiceNo    | amount         | status   | linearId    | remarks                  |
++--------------+----------------+----------+-------------+--------------------------+
+| INV-000941-A | 125,000.00 INR | PAID     | ff2c069c... | NEFT UTR HDFC0001234567  |
+| INV-000941-B | 48,250.50 INR  | APPROVED | 2448d600... | Approved by finance      |
+| INV-000941-C | 9,999.99 INR   | REJECTED | 838ca93b... | Wrong quantity delivered |
++--------------+----------------+----------+-------------+--------------------------+
+
+  BuyerCorp vault:
++--------------+----------------+----------+-------------+--------------------------+
+| invoiceNo    | amount         | status   | linearId    | remarks                  |
++--------------+----------------+----------+-------------+--------------------------+
+| INV-000941-A | 125,000.00 INR | PAID     | ff2c069c... | NEFT UTR HDFC0001234567  |
+| INV-000941-B | 48,250.50 INR  | APPROVED | 2448d600... | Approved by finance      |
+| INV-000941-C | 9,999.99 INR   | REJECTED | 838ca93b... | Wrong quantity delivered |
++--------------+----------------+----------+-------------+--------------------------+
+    [PASS] Seller and Buyer vaults are in agreement
+
+================================================================================================
+ RESULT: ALL CHECKS PASSED
+================================================================================================

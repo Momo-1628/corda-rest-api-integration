@@ -1,0 +1,31 @@
+{
+  "request": {
+    "method": "PUT",
+    "url": "http://localhost:10060/api/invoices/2448d600-3ab9-4468-b1aa-278f3781045b/approve",
+    "body": {
+      "remarks": "Approved by finance"
+    }
+  },
+  "status": 200,
+  "response": {
+    "success": true,
+    "data": {
+      "txHash": "FA9BF53A39997C57738603A02273399994169665D0004ADDF059DF5B6F063A90",
+      "linearId": "2448d600-3ab9-4468-b1aa-278f3781045b",
+      "invoice": {
+        "linearId": "2448d600-3ab9-4468-b1aa-278f3781045b",
+        "invoiceNo": "INV-000941-B",
+        "seller": "O=SellerCorp, L=Mumbai, C=IN",
+        "buyer": "O=BuyerCorp, L=Bengaluru, C=IN",
+        "amount": 48250.5,
+        "currency": "INR",
+        "description": "Annual maintenance contract - Q1",
+        "dueDate": "2026-12-31",
+        "status": "APPROVED",
+        "remarks": "Approved by finance"
+      }
+    },
+    "error": null,
+    "timestamp": "2026-11-18T18:39:58.644380600Z"
+  }
+}

@@ -1,0 +1,12 @@
+I 00:09:33 1 NodeRPCConnection.cordaRPCOps - Connected to O=SellerCorp, L=Mumbai, C=IN
+I 00:09:35 1 TomcatWebServer.start - Tomcat started on port 10050 (http) with context path ''
+I 00:09:35 1 Starter.logStarted - Started Starter in 25.763 seconds (process running for 27.2)
+I 00:09:36 97 API-REQUEST.doFilterInternal - [89962ab7] GET /api/health -> 200 (334 ms)
+I 00:09:41 99 API-REQUEST.doFilterInternal - [b98b3e2d] GET /api/health -> 200 (32 ms)
+I 00:09:41 101 API-REQUEST.doFilterInternal - [fa216523] GET /api/me -> 200 (96 ms)
+I 00:09:41 103 API-REQUEST.doFilterInternal - [cc5f92cc] GET /api/peers -> 200 (144 ms)
+I 00:09:41 105 API-REQUEST.doFilterInternal - [c133e76d] GET /api/notaries -> 200 (15 ms)
+I 00:09:50 97 API-REQUEST.doFilterInternal - [f54f65b7] POST /api/invoices -> 201 (8396 ms)
+I 00:09:51 100 API-REQUEST.doFilterInternal - [e9618472] POST /api/invoices -> 201 (724 ms)
+I 00:09:51 101 API-REQUEST.doFilterInternal - [b738f7c3] POST /api/invoices -> 201 (658 ms)
+I 00:09:58 103 API-REQUEST.doFilterInternal - [403efe6e] GET /api/invoices -> 401 (1 ms)

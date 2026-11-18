@@ -1,0 +1,20 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "http://localhost:10060/api/me",
+    "body": null
+  },
+  "status": 200,
+  "response": {
+    "success": true,
+    "data": {
+      "name": "O=BuyerCorp, L=Bengaluru, C=IN",
+      "organisation": "BuyerCorp",
+      "locality": "Bengaluru",
+      "country": "IN",
+      "platformVersion": 140
+    },
+    "error": null,
+    "timestamp": "2026-11-18T18:39:41.748706200Z"
+  }
+}

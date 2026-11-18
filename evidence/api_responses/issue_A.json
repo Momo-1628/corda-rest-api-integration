@@ -1,0 +1,36 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "http://localhost:10050/api/invoices",
+    "body": {
+      "invoiceNo": "INV-000941-A",
+      "buyer": "O=BuyerCorp,L=Bengaluru,C=IN",
+      "amount": 125000.0,
+      "currency": "INR",
+      "description": "50 units of industrial steel rods",
+      "dueDate": "2026-12-31"
+    }
+  },
+  "status": 201,
+  "response": {
+    "success": true,
+    "data": {
+      "txHash": "35D6B1228C7DBBC25806AE6C8C757DA85CC6C184B6D0931A9C5440BD345A20C7",
+      "linearId": "ff2c069c-b469-4e16-9555-a4e8c000c774",
+      "invoice": {
+        "linearId": "ff2c069c-b469-4e16-9555-a4e8c000c774",
+        "invoiceNo": "INV-000941-A",
+        "seller": "O=SellerCorp, L=Mumbai, C=IN",
+        "buyer": "O=BuyerCorp, L=Bengaluru, C=IN",
+        "amount": 125000.0,
+        "currency": "INR",
+        "description": "50 units of industrial steel rods",
+        "dueDate": "2026-12-31",
+        "status": "ISSUED",
+        "remarks": null
+      }
+    },
+    "error": null,
+    "timestamp": "2026-11-18T18:39:50.368782500Z"
+  }
+}

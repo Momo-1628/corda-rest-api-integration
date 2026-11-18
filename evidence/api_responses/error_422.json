@@ -1,0 +1,21 @@
+{
+  "request": {
+    "method": "PUT",
+    "url": "http://localhost:10060/api/invoices/838ca93b-9ffa-4803-b52f-bcf46495a609/pay",
+    "body": {
+      "remarks": "trying to pay too early"
+    }
+  },
+  "status": 422,
+  "response": {
+    "success": false,
+    "data": null,
+    "error": {
+      "status": 422,
+      "code": "FLOW_FAILED",
+      "message": "Invoice INV-000941-C must be APPROVED to move to PAID (current status: ISSUED).",
+      "details": null
+    },
+    "timestamp": "2026-11-18T18:39:59.106404400Z"
+  }
+}

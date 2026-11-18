@@ -1,0 +1,91 @@
+> gradlew test --rerun-tasks      (2026-11-19 00:13, JDK: openjdk version "17.0.20.1" 2026-08-18)
+> Task :contracts:compileJava
+> Task :workflows:compileJava
+> Task :compileJava NO-SOURCE
+> Task :processResources
+> Task :classes
+> Task :compileTestJava NO-SOURCE
+> Task :processTestResources NO-SOURCE
+> Task :testClasses UP-TO-DATE
+> Task :contracts:processResources NO-SOURCE
+> Task :contracts:classes
+> Task :contracts:configureCordappFatJar
+> Task :contracts:jar
+> Task :workflows:processResources
+> Task :workflows:classes
+> Task :workflows:configureCordappFatJar
+> Task :workflows:jar
+> Task :test NO-SOURCE
+> Task :contracts:compileTestJava
+> Task :contracts:processTestResources NO-SOURCE
+> Task :contracts:testClasses
+> Task :contracts:test
+com.cordarest.contracts.InvoiceContractTests > fullLifecycleInOneLedger PASSED
+com.cordarest.contracts.InvoiceContractTests > issueFailsWhenOutputIsNotIssued PASSED
+com.cordarest.contracts.InvoiceContractTests > issueFailsWhenSellerEqualsBuyer PASSED
+com.cordarest.contracts.InvoiceContractTests > approveIsValidWhenSignedByBuyer PASSED
+com.cordarest.contracts.InvoiceContractTests > rejectFailsFromApproved PASSED
+com.cordarest.contracts.InvoiceContractTests > payFailsWhenInvoiceIsNotApproved PASSED
+com.cordarest.contracts.InvoiceContractTests > issueFailsWithoutBuyerSignature PASSED
+com.cordarest.contracts.InvoiceContractTests > issueFailsWithAnInput PASSED
+com.cordarest.contracts.InvoiceContractTests > payIsValidFromApproved PASSED
+com.cordarest.contracts.InvoiceContractTests > approveFailsWhenOnlySellerSigns PASSED
+com.cordarest.contracts.InvoiceContractTests > issueIsValidWhenSignedByBothParties PASSED
+com.cordarest.contracts.InvoiceContractTests > approveFailsWhenAmountChanges PASSED
+com.cordarest.contracts.InvoiceContractTests > rejectIsValidFromIssued PASSED
+com.cordarest.contracts.InvoiceContractTests > issueFailsWhenAmountIsZeroOrNegative PASSED
+com.cordarest.contracts.InvoiceContractTests > approveFailsWhenPartiesChange PASSED
+> Task :webserver:compileJava
+> Task :webserver:processResources
+> Task :webserver:classes
+> Task :webserver:compileTestJava
+> Task :webserver:processTestResources NO-SOURCE
+> Task :webserver:testClasses
+> Task :webserver:test
+InvoiceApiTests > POST with amount <= 0 -> 400 with field message PASSED
+InvoiceApiTests > Flow / contract failure (pay an un-approved invoice) -> 422 PASSED
+InvoiceApiTests > GET /api/invoices?status=BOGUS -> 400 PASSED
+InvoiceApiTests > Wrong X-API-KEY -> 401 PASSED
+InvoiceApiTests > POST with an unknown buyer -> 400 PASSED
+InvoiceApiTests > GET /api/invoices/{id} -> 200 PASSED
+InvoiceApiTests > OpenAPI document is served PASSED
+InvoiceApiTests > CORS pre-flight is allowed without a key PASSED
+InvoiceApiTests > PUT /approve -> 200 with new status PASSED
+InvoiceApiTests > linearId that is not a UUID -> 400 PASSED
+InvoiceApiTests > Remarks longer than 500 chars -> 400 PASSED
+InvoiceApiTests > GET /api/invoices?status= filters PASSED
+InvoiceApiTests > Unknown linearId -> 404 PASSED
+InvoiceApiTests > GET /api/invoices/{id}/history returns every version in order PASSED
+InvoiceApiTests > POST with several missing/invalid fields -> 400 listing all of them PASSED
+InvoiceApiTests > Buyer given as organisation name only is resolved PASSED
+InvoiceApiTests > Missing X-API-KEY -> 401 with envelope PASSED
+InvoiceApiTests > POST /api/invoices -> 201 with txHash and linearId PASSED
+InvoiceApiTests > POST with malformed JSON -> 400 PASSED
+InvoiceApiTests > GET /api/me, /api/peers, /api/notaries PASSED
+InvoiceApiTests > GET /api/health is public and reports UP PASSED
+> Task :workflows:compileTestJava
+> Task :workflows:processTestResources
+> Task :workflows:testClasses
+> Task :workflows:test
+com.cordarest.flows.InvoiceFlowTests > sellerCannotApproveItsOwnInvoice PASSED
+com.cordarest.flows.InvoiceFlowTests > issueRejectLifecycle PASSED
+com.cordarest.flows.InvoiceFlowTests > issuingWithZeroAmountFailsContractVerification PASSED
+com.cordarest.flows.InvoiceFlowTests > issueIsSignedByBothPartiesAndRecordedInBothVaults PASSED
+com.cordarest.flows.InvoiceFlowTests > issueApprovePayLifecycle PASSED
+com.cordarest.flows.InvoiceFlowTests > payingAnUnapprovedInvoiceFails PASSED
+BUILD SUCCESSFUL in 3m 23s
+17 actionable tasks: 17 executed
+
+==============================================================================
+ JUnit summary (from build/test-results XML)
+==============================================================================
+ Test class                                      tests  failed    time s
+------------------------------------------------------------------------------
+ com.cordarest.webserver.InvoiceApiTests            21       0      12.0
+ com.cordarest.contracts.InvoiceContractTests       15       0      10.2
+ com.cordarest.flows.InvoiceFlowTests                6       0     124.9
+------------------------------------------------------------------------------
+ TOTAL                                              42       0
+==============================================================================
+ Note: the flow tests that expect failures make Corda log the rejected flows; those
+ log lines are in test_results_full_log.txt and are not test failures.

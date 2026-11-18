@@ -1,0 +1,31 @@
+{
+  "request": {
+    "method": "PUT",
+    "url": "http://localhost:10060/api/invoices/838ca93b-9ffa-4803-b52f-bcf46495a609/reject",
+    "body": {
+      "remarks": "Wrong quantity delivered"
+    }
+  },
+  "status": 200,
+  "response": {
+    "success": true,
+    "data": {
+      "txHash": "68300A10C8B874D2EB205013BF851155F38490C69EE3D2D45B64EAA67E3152AB",
+      "linearId": "838ca93b-9ffa-4803-b52f-bcf46495a609",
+      "invoice": {
+        "linearId": "838ca93b-9ffa-4803-b52f-bcf46495a609",
+        "invoiceNo": "INV-000941-C",
+        "seller": "O=SellerCorp, L=Mumbai, C=IN",
+        "buyer": "O=BuyerCorp, L=Bengaluru, C=IN",
+        "amount": 9999.99,
+        "currency": "INR",
+        "description": "Office furniture (wrong quantity)",
+        "dueDate": "2026-12-31",
+        "status": "REJECTED",
+        "remarks": "Wrong quantity delivered"
+      }
+    },
+    "error": null,
+    "timestamp": "2026-11-18T18:39:59.940263800Z"
+  }
+}

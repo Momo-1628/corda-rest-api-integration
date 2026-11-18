@@ -1,0 +1,80 @@
+import static org.gradle.api.JavaVersion.VERSION_17
+
+apply plugin: 'org.springframework.boot'
+
+// Corda + Spring Boot both ship a logging backend; I use log4j2 everywhere and drop logback.
+configurations.all {
+    exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    exclude group: 'ch.qos.logback'
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDir rootProject.file("config/dev")
+        }
+    }
+}
+
+dependencies {
+    // Corda RPC client + CorDapp classes (states, flows) so the API can start flows by class.
+    implementation "$corda_release_group:corda-rpc:$corda_release_version"
+    implementation "$corda_core_release_group:corda-core:$corda_core_release_version"
+    implementation project(":contracts")
+    implementation project(":workflows")
+
+    // Spring Boot 3 web stack
+    implementation "org.springframework.boot:spring-boot-starter-web:$spring_boot_version"
+    implementation "org.springframework.boot:spring-boot-starter-validation:$spring_boot_version"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.4"
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0"
+
+    // Logging (log4j2)
+    implementation "org.apache.logging.log4j:log4j-slf4j2-impl:${log4j_version}"
+    implementation "org.apache.logging.log4j:log4j-web:${log4j_version}"
+    implementation "org.slf4j:jul-to-slf4j:$slf4j_version"
+
+    // API tests: MockMvc + Mockito (CordaRPCOps is mocked, no node needed)
+    testImplementation "org.springframework.boot:spring-boot-starter-test:$spring_boot_version"
+}
+
+springBoot {
+    mainClass = "com.cordarest.webserver.Starter"
+}
+
+test {
+    useJUnitPlatform()
+    jvmArgs = rootProject.ext.test_add_opens
+    testLogging { events "passed", "failed", "skipped"; exceptionFormat "full" }
+}
+
+def serverJvmArgs = rootProject.ext.test_add_opens
+
+/* Writes a java @argfile with the full runtime classpath so the API can be launched with plain
+ * `java @build/webserver.args com.cordarest.webserver.Starter --spring.profiles.active=seller`.
+ * (Running from the classpath avoids Spring Boot fat-jar issues with Corda's class scanning.) */
+task writeLaunchArgs(dependsOn: ['classes']) {
+    def out = file("$buildDir/webserver.args")
+    outputs.file(out)
+    doLast {
+        def cp = (sourceSets.main.runtimeClasspath.files.collect { it.absolutePath.replace('\\', '/') }).join(File.pathSeparator)
+        out.parentFile.mkdirs()
+        out.text = (serverJvmArgs.collect { "\"$it\"" } + ['-cp', "\"$cp\""]).join('\n')
+        println "Launch args written to $out"
+    }
+}
+
+/* One webserver per node. Both tasks pick the node through a Spring profile. */
+task runSellerServer(type: JavaExec, dependsOn: 'classes') {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.cordarest.webserver.Starter'
+    jvmArgs = serverJvmArgs
+    args '--spring.profiles.active=seller'
+}
+
+task runBuyerServer(type: JavaExec, dependsOn: 'classes') {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.cordarest.webserver.Starter'
+    jvmArgs = serverJvmArgs
+    args '--spring.profiles.active=buyer'
+}

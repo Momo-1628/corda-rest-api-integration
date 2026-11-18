@@ -1,0 +1,789 @@
+{
+  "info": {
+    "name": "Corda REST API - Invoice CorDapp (Suraj Patel 24BTRBT029)",
+    "description": "REST API in front of a Corda 4.12 invoice CorDapp. Seller API on :10050, Buyer API on :10060. Run the folders in order.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "sellerUrl",
+      "value": "http://localhost:10050"
+    },
+    {
+      "key": "buyerUrl",
+      "value": "http://localhost:10060"
+    },
+    {
+      "key": "sellerKey",
+      "value": "seller-secret-key-123"
+    },
+    {
+      "key": "buyerKey",
+      "value": "buyer-secret-key-456"
+    },
+    {
+      "key": "linearId",
+      "value": ""
+    },
+    {
+      "key": "linearId2",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "1 Node info",
+      "item": [
+        {
+          "name": "Health (no key)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{sellerUrl}}/api/health",
+              "host": [
+                "{{sellerUrl}}"
+              ],
+              "path": [
+                "api",
+                "health"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"envelope\", () => { const j = pm.response.json(); pm.expect(j).to.have.keys(\"success\",\"data\",\"error\",\"timestamp\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Me - Seller",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-KEY",
+                "value": "{{sellerKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{sellerUrl}}/api/me",
+              "host": [
+                "{{sellerUrl}}"
+              ],
+              "path": [
+                "api",
+                "me"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"envelope\", () => { const j = pm.response.json(); pm.expect(j).to.have.keys(\"success\",\"data\",\"error\",\"timestamp\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Me - Buyer",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-KEY",
+                "value": "{{buyerKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{buyerUrl}}/api/me",
+              "host": [
+                "{{buyerUrl}}"
+              ],
+              "path": [
+                "api",
+                "me"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"envelope\", () => { const j = pm.response.json(); pm.expect(j).to.have.keys(\"success\",\"data\",\"error\",\"timestamp\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Peers",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-KEY",
+                "value": "{{sellerKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{sellerUrl}}/api/peers",
+              "host": [
+                "{{sellerUrl}}"
+              ],
+              "path": [
+                "api",
+                "peers"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"envelope\", () => { const j = pm.response.json(); pm.expect(j).to.have.keys(\"success\",\"data\",\"error\",\"timestamp\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Notaries",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-KEY",
+                "value": "{{sellerKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{sellerUrl}}/api/notaries",
+              "host": [
+                "{{sellerUrl}}"
+              ],
+              "path": [
+                "api",
+                "notaries"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"envelope\", () => { const j = pm.response.json(); pm.expect(j).to.have.keys(\"success\",\"data\",\"error\",\"timestamp\"); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "2 Invoice lifecycle",
+      "item": [
+        {
+          "name": "Issue invoice (Seller)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-API-KEY",
+                "value": "{{sellerKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{sellerUrl}}/api/invoices",
+              "host": [
+                "{{sellerUrl}}"
+              ],
+              "path": [
+                "api",
+                "invoices"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"invoiceNo\": \"INV-PM-{{$timestamp}}\",\n  \"buyer\": \"O=BuyerCorp,L=Bengaluru,C=IN\",\n  \"amount\": 125000.0,\n  \"currency\": \"INR\",\n  \"description\": \"Postman demo invoice\",\n  \"dueDate\": \"2026-12-31\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 201\", () => pm.response.to.have.status(201));",
+                  "pm.test(\"envelope\", () => { const j = pm.response.json(); pm.expect(j).to.have.keys(\"success\",\"data\",\"error\",\"timestamp\"); });",
+                  "pm.collectionVariables.set(\"linearId\", pm.response.json().data.linearId);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Issue 2nd invoice (Seller)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-API-KEY",
+                "value": "{{sellerKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{sellerUrl}}/api/invoices",
+              "host": [
+                "{{sellerUrl}}"
+              ],
+              "path": [
+                "api",
+                "invoices"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"invoiceNo\": \"INV-PM2-{{$timestamp}}\",\n  \"buyer\": \"O=BuyerCorp,L=Bengaluru,C=IN\",\n  \"amount\": 5000,\n  \"currency\": \"INR\",\n  \"description\": \"Postman demo invoice\",\n  \"dueDate\": \"2026-12-31\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 201\", () => pm.response.to.have.status(201));",
+                  "pm.test(\"envelope\", () => { const j = pm.response.json(); pm.expect(j).to.have.keys(\"success\",\"data\",\"error\",\"timestamp\"); });",
+                  "pm.collectionVariables.set(\"linearId2\", pm.response.json().data.linearId);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "List invoices (Buyer)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-KEY",
+                "value": "{{buyerKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{buyerUrl}}/api/invoices",
+              "host": [
+                "{{buyerUrl}}"
+              ],
+              "path": [
+                "api",
+                "invoices"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"envelope\", () => { const j = pm.response.json(); pm.expect(j).to.have.keys(\"success\",\"data\",\"error\",\"timestamp\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "List ISSUED invoices",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-KEY",
+                "value": "{{buyerKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{buyerUrl}}/api/invoices?status=ISSUED",
+              "host": [
+                "{{buyerUrl}}"
+              ],
+              "path": [
+                "api",
+                "invoices"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "ISSUED"
+                }
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"envelope\", () => { const j = pm.response.json(); pm.expect(j).to.have.keys(\"success\",\"data\",\"error\",\"timestamp\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get invoice by linearId",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-KEY",
+                "value": "{{buyerKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{buyerUrl}}/api/invoices/{{linearId}}",
+              "host": [
+                "{{buyerUrl}}"
+              ],
+              "path": [
+                "api",
+                "invoices",
+                "{{linearId}}"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"envelope\", () => { const j = pm.response.json(); pm.expect(j).to.have.keys(\"success\",\"data\",\"error\",\"timestamp\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Approve (Buyer)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "X-API-KEY",
+                "value": "{{buyerKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{buyerUrl}}/api/invoices/{{linearId}}/approve",
+              "host": [
+                "{{buyerUrl}}"
+              ],
+              "path": [
+                "api",
+                "invoices",
+                "{{linearId}}",
+                "approve"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"remarks\": \"Goods received\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"envelope\", () => { const j = pm.response.json(); pm.expect(j).to.have.keys(\"success\",\"data\",\"error\",\"timestamp\"); });",
+                  "pm.test(\"APPROVED\", () => pm.expect(pm.response.json().data.invoice.status).to.eql(\"APPROVED\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Pay (Buyer)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "X-API-KEY",
+                "value": "{{buyerKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{buyerUrl}}/api/invoices/{{linearId}}/pay",
+              "host": [
+                "{{buyerUrl}}"
+              ],
+              "path": [
+                "api",
+                "invoices",
+                "{{linearId}}",
+                "pay"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"remarks\": \"UTR-POSTMAN-1\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"envelope\", () => { const j = pm.response.json(); pm.expect(j).to.have.keys(\"success\",\"data\",\"error\",\"timestamp\"); });",
+                  "pm.test(\"PAID\", () => pm.expect(pm.response.json().data.invoice.status).to.eql(\"PAID\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Reject 2nd invoice (Buyer)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "X-API-KEY",
+                "value": "{{buyerKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{buyerUrl}}/api/invoices/{{linearId2}}/reject",
+              "host": [
+                "{{buyerUrl}}"
+              ],
+              "path": [
+                "api",
+                "invoices",
+                "{{linearId2}}",
+                "reject"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"remarks\": \"Wrong quantity\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"envelope\", () => { const j = pm.response.json(); pm.expect(j).to.have.keys(\"success\",\"data\",\"error\",\"timestamp\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "History (Seller)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-KEY",
+                "value": "{{sellerKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{sellerUrl}}/api/invoices/{{linearId}}/history",
+              "host": [
+                "{{sellerUrl}}"
+              ],
+              "path": [
+                "api",
+                "invoices",
+                "{{linearId}}",
+                "history"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"envelope\", () => { const j = pm.response.json(); pm.expect(j).to.have.keys(\"success\",\"data\",\"error\",\"timestamp\"); });",
+                  "pm.test(\"3 versions\", () => pm.expect(pm.response.json().data.length).to.eql(3));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "3 Error cases",
+      "item": [
+        {
+          "name": "401 - wrong API key",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-KEY",
+                "value": "wrong-key"
+              }
+            ],
+            "url": {
+              "raw": "{{sellerUrl}}/api/invoices",
+              "host": [
+                "{{sellerUrl}}"
+              ],
+              "path": [
+                "api",
+                "invoices"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 401\", () => pm.response.to.have.status(401));",
+                  "pm.test(\"envelope\", () => { const j = pm.response.json(); pm.expect(j).to.have.keys(\"success\",\"data\",\"error\",\"timestamp\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "400 - invalid amount",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-API-KEY",
+                "value": "{{sellerKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{sellerUrl}}/api/invoices",
+              "host": [
+                "{{sellerUrl}}"
+              ],
+              "path": [
+                "api",
+                "invoices"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"invoiceNo\": \"INV-PM-{{$timestamp}}\",\n  \"buyer\": \"O=BuyerCorp,L=Bengaluru,C=IN\",\n  \"amount\": -10,\n  \"currency\": \"INR\",\n  \"description\": \"Postman demo invoice\",\n  \"dueDate\": \"2026-12-31\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"envelope\", () => { const j = pm.response.json(); pm.expect(j).to.have.keys(\"success\",\"data\",\"error\",\"timestamp\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "422 - pay a REJECTED invoice",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "X-API-KEY",
+                "value": "{{buyerKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{buyerUrl}}/api/invoices/{{linearId2}}/pay",
+              "host": [
+                "{{buyerUrl}}"
+              ],
+              "path": [
+                "api",
+                "invoices",
+                "{{linearId2}}",
+                "pay"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"remarks\": \"too late\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 422\", () => pm.response.to.have.status(422));",
+                  "pm.test(\"envelope\", () => { const j = pm.response.json(); pm.expect(j).to.have.keys(\"success\",\"data\",\"error\",\"timestamp\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "404 - unknown linearId",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-KEY",
+                "value": "{{buyerKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{buyerUrl}}/api/invoices/00000000-0000-0000-0000-000000000000",
+              "host": [
+                "{{buyerUrl}}"
+              ],
+              "path": [
+                "api",
+                "invoices",
+                "00000000-0000-0000-0000-000000000000"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 404\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"envelope\", () => { const j = pm.response.json(); pm.expect(j).to.have.keys(\"success\",\"data\",\"error\",\"timestamp\"); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

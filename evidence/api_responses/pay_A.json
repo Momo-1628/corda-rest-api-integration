@@ -1,0 +1,31 @@
+{
+  "request": {
+    "method": "PUT",
+    "url": "http://localhost:10060/api/invoices/ff2c069c-b469-4e16-9555-a4e8c000c774/pay",
+    "body": {
+      "remarks": "NEFT UTR HDFC0001234567"
+    }
+  },
+  "status": 200,
+  "response": {
+    "success": true,
+    "data": {
+      "txHash": "945945448B3E2C6EE7D2FA357442F53C9E2DA712CB97AEAF65955488729484D4",
+      "linearId": "ff2c069c-b469-4e16-9555-a4e8c000c774",
+      "invoice": {
+        "linearId": "ff2c069c-b469-4e16-9555-a4e8c000c774",
+        "invoiceNo": "INV-000941-A",
+        "seller": "O=SellerCorp, L=Mumbai, C=IN",
+        "buyer": "O=BuyerCorp, L=Bengaluru, C=IN",
+        "amount": 125000.0,
+        "currency": "INR",
+        "description": "50 units of industrial steel rods",
+        "dueDate": "2026-12-31",
+        "status": "PAID",
+        "remarks": "NEFT UTR HDFC0001234567"
+      }
+    },
+    "error": null,
+    "timestamp": "2026-11-18T18:39:58.042036600Z"
+  }
+}
