@@ -1,0 +1,515 @@
+1
+00:00:00,150 --> 00:00:05,711
+Hello, I am Suraj Patel, USN 24BTRBT029, from B.Tech Computer Science with
+
+2
+00:00:05,761 --> 00:00:11,398
+specialisation in Blockchain Technology, Semester five, at Jain University.
+
+3
+00:00:11,448 --> 00:00:17,160
+My Corda Development mini project is topic twenty five: Implementation of an
+
+4
+00:00:17,210 --> 00:00:21,027
+External REST API Integration with a Corda CorDapp.
+
+5
+00:00:21,077 --> 00:00:25,652
+I built an invoice application on Corda 4.12 and put a Spring
+
+6
+00:00:25,702 --> 00:00:29,898
+Boot REST API in front of it, so outside systems like an
+
+7
+00:00:29,948 --> 00:00:34,372
+ERP or a web app can use the ledger with simple JSON calls.
+
+8
+00:00:35,122 --> 00:00:39,778
+When two companies trade, the seller and the buyer each keep their
+
+9
+00:00:39,828 --> 00:00:43,558
+own copy of the same invoice in separate ERP systems.
+
+10
+00:00:43,608 --> 00:00:48,692
+These copies drift apart, and finance teams waste days reconciling them.
+
+11
+00:00:48,742 --> 00:00:53,185
+Corda fixes this with one shared, signed and notarised invoice.
+
+12
+00:00:53,235 --> 00:00:57,820
+But a Corda node is only reachable through Corda RPC, which needs
+
+13
+00:00:57,870 --> 00:01:01,171
+Java libraries and Corda classes on the client.
+
+14
+00:01:01,221 --> 00:01:05,379
+So my problem was to build a secure REST bridge that normal
+
+15
+00:01:05,429 --> 00:01:07,304
+business software can call.
+
+16
+00:01:08,054 --> 00:01:09,653
+I set five objectives.
+
+17
+00:01:09,703 --> 00:01:14,898
+First, model the invoice as a linear state with four statuses: issued,
+
+18
+00:01:14,948 --> 00:01:16,996
+approved, paid and rejected.
+
+19
+00:01:17,046 --> 00:01:21,117
+Second, enforce the rules in a contract and four flows.
+
+20
+00:01:21,167 --> 00:01:25,838
+Third, the core of the topic, build a production style REST API
+
+21
+00:01:25,888 --> 00:01:29,884
+with authentication, validation and clear error codes.
+
+22
+00:01:29,934 --> 00:01:35,954
+Fourth, prove it works from outside, using a Python ERP client, Postman and curl.
+
+23
+00:01:36,004 --> 00:01:41,124
+And fifth, test everything automatically and measure the API latency.
+
+24
+00:01:41,874 --> 00:01:43,919
+Why REST in front of Corda?
+
+25
+00:01:43,969 --> 00:01:47,799
+Corda RPC is designed for Java and Kotlin clients.
+
+26
+00:01:47,849 --> 00:01:52,766
+It needs the RPC library and the CorDapp classes, it talks AMQP,
+
+27
+00:01:52,816 --> 00:01:55,560
+and it returns Corda specific types.
+
+28
+00:01:55,610 --> 00:01:59,673
+A browser cannot use it, and an SAP or dot net system
+
+29
+00:01:59,723 --> 00:02:01,846
+cannot easily use it either.
+
+30
+00:02:01,896 --> 00:02:08,364
+REST works from any language, JSON is universal, and Swagger documents the contract.
+
+31
+00:02:08,414 --> 00:02:13,098
+So I kept RPC inside the trusted server and exposed only REST
+
+32
+00:02:13,148 --> 00:02:14,728
+to the outside world.
+
+33
+00:02:15,478 --> 00:02:18,046
+These are the Corda concepts I used.
+
+34
+00:02:18,096 --> 00:02:22,991
+The invoice is a LinearState, so every version keeps the same linear
+
+35
+00:02:23,041 --> 00:02:25,536
+ID, which the API uses in its URLs.
+
+36
+00:02:25,586 --> 00:02:30,626
+Following the UTXO model, each approve, pay or reject consumes the old
+
+37
+00:02:30,676 --> 00:02:34,990
+state and creates a new one, which gives a free audit trail.
+
+38
+00:02:35,040 --> 00:02:40,516
+The contract runs on every node, flows collect signatures, a notary prevents
+
+39
+00:02:40,566 --> 00:02:44,516
+double spends, and RPC is the only door into the vault.
+
+40
+00:02:45,266 --> 00:02:47,282
+Here is the architecture.
+
+41
+00:02:47,332 --> 00:02:52,818
+On the left are the external systems: my Python ERP client, Postman
+
+42
+00:02:52,868 --> 00:02:55,132
+or curl, and web dashboards.
+
+43
+00:02:55,182 --> 00:02:57,610
+They only speak HTTP and JSON.
+
+44
+00:02:57,660 --> 00:03:02,486
+In the middle, I run one Spring Boot instance per node, the
+
+45
+00:03:02,536 --> 00:03:07,195
+Seller API on port 10050 and the Buyer API on port 10060.
+
+46
+00:03:07,245 --> 00:03:13,062
+Each request passes logging and API key filters, the controller and the
+
+47
+00:03:13,112 --> 00:03:17,194
+service, which calls the node through CordaRPCOps.
+
+48
+00:03:17,244 --> 00:03:20,664
+On the right, the nodes talk peer to peer.
+
+49
+00:03:21,414 --> 00:03:23,244
+This is the ledger design.
+
+50
+00:03:23,294 --> 00:03:28,958
+The InvoiceState holds the linear ID, invoice number, seller and buyer, amount,
+
+51
+00:03:29,008 --> 00:03:35,395
+currency, description, due date, status and remarks, and both companies are participants.
+
+52
+00:03:35,445 --> 00:03:40,603
+Issue needs an amount above zero, different parties and both signatures.
+
+53
+00:03:40,653 --> 00:03:45,738
+Approve, pay and reject need only the buyer's signature and must follow
+
+54
+00:03:45,788 --> 00:03:47,691
+the lifecycle on the right.
+
+55
+00:03:47,741 --> 00:03:53,260
+On every transition, the invoice number, amount and parties can never change.
+
+56
+00:03:54,010 --> 00:03:56,447
+This sequence shows a new invoice.
+
+57
+00:03:56,497 --> 00:04:01,860
+The API checks the key and validates the body, then calls startFlowDynamic
+
+58
+00:04:01,910 --> 00:04:03,249
+on the seller node.
+
+59
+00:04:03,299 --> 00:04:08,809
+IssueInvoiceFlow builds the transaction, verifies the contract and signs it.
+
+60
+00:04:08,859 --> 00:04:14,294
+Through CollectSignaturesFlow, the buyer checks the proposal and signs too.
+
+61
+00:04:14,344 --> 00:04:20,292
+FinalityFlow gets the notary signature and records the transaction in both vaults.
+
+62
+00:04:20,342 --> 00:04:24,023
+The API then returns 201 with the transaction hash.
+
+63
+00:04:24,073 --> 00:04:27,680
+Approve, pay and reject share one buyer side flow.
+
+64
+00:04:28,430 --> 00:04:30,671
+The API has eleven endpoints.
+
+65
+00:04:30,721 --> 00:04:36,200
+Four describe the node: me, peers, notaries and a public health check.
+
+66
+00:04:36,250 --> 00:04:40,939
+POST on the invoices path issues an invoice and returns 201.
+
+67
+00:04:40,989 --> 00:04:47,180
+GET lists invoices, optionally filtered by status, or fetches one by linear ID.
+
+68
+00:04:47,230 --> 00:04:52,314
+PUT approve, pay and reject start the matching flows on the buyer
+
+69
+00:04:52,364 --> 00:04:55,474
+node, and history returns every version.
+
+70
+00:04:55,524 --> 00:05:00,924
+Every response uses one envelope: success, data, error and timestamp.
+
+71
+00:05:01,674 --> 00:05:06,039
+Because this API is the front door to a ledger, I added
+
+72
+00:05:06,089 --> 00:05:08,286
+production style protection.
+
+73
+00:05:08,336 --> 00:05:14,707
+Every call except health needs an X-API-KEY header, otherwise the answer is 401.
+
+74
+00:05:14,757 --> 00:05:20,326
+Bean validation rejects a negative amount or a wrong currency with 400
+
+75
+00:05:20,376 --> 00:05:22,654
+and a clear list of problems.
+
+76
+00:05:22,704 --> 00:05:27,148
+A global handler maps an unknown linear ID to 404, and a
+
+77
+00:05:27,198 --> 00:05:29,877
+flow or contract rejection to 422.
+
+78
+00:05:29,927 --> 00:05:33,088
+I also enabled CORS and request logging.
+
+79
+00:05:33,838 --> 00:05:38,978
+My tech stack is Corda 4.12 Community Edition on Java 17, starting
+
+80
+00:05:39,028 --> 00:05:43,775
+from the official R3 Java template and built with Gradle 7.6.
+
+81
+00:05:43,825 --> 00:05:49,122
+The REST layer uses Spring Boot 3.2 with Spring Web, Bean Validation
+
+82
+00:05:49,172 --> 00:05:51,167
+and springdoc for Swagger.
+
+83
+00:05:51,217 --> 00:05:57,930
+For testing I used the Corda ledger DSL, MockNetwork, and Spring MockMvc with Mockito.
+
+84
+00:05:57,980 --> 00:06:03,041
+The ERP simulation is written in Python with requests, and I also
+
+85
+00:06:03,091 --> 00:06:05,636
+provide Postman and curl scripts.
+
+86
+00:06:06,386 --> 00:06:07,546
+Now the results.
+
+87
+00:06:07,596 --> 00:06:11,783
+I wrote forty two automated tests, and all of them pass.
+
+88
+00:06:11,833 --> 00:06:16,928
+Fifteen contract tests use the ledger DSL to cover valid and invalid
+
+89
+00:06:16,978 --> 00:06:22,451
+cases, like a zero amount, a missing buyer signature or a changed amount.
+
+90
+00:06:22,501 --> 00:06:26,687
+Six flow tests run on an in memory network with a notary
+
+91
+00:06:26,737 --> 00:06:28,125
+and both companies.
+
+92
+00:06:28,175 --> 00:06:33,043
+And twenty one API tests use MockMvc with a mocked CordaRPCOps to
+
+93
+00:06:33,093 --> 00:06:37,128
+check routing, security, validation and error mapping.
+
+94
+00:06:37,878 --> 00:06:44,172
+For the live demo, I deployed the notary, SellerCorp and BuyerCorp, started
+
+95
+00:06:44,222 --> 00:06:47,302
+them headless, and started both APIs.
+
+96
+00:06:47,352 --> 00:06:51,447
+On the left is the Swagger UI for the seller API.
+
+97
+00:06:51,497 --> 00:06:57,115
+On the right, my ERP client has issued three invoices, approved and
+
+98
+00:06:57,165 --> 00:07:01,345
+paid one, approved another and rejected the third.
+
+99
+00:07:01,395 --> 00:07:05,997
+It also showed every error case: 401, 400, 422 and 404.
+
+100
+00:07:06,047 --> 00:07:10,396
+Finally, both vaults held exactly the same invoices.
+
+101
+00:07:11,146 --> 00:07:17,259
+For performance, I timed twenty POST calls to the invoices endpoint after
+
+102
+00:07:17,309 --> 00:07:18,779
+two warm up calls.
+
+103
+00:07:18,829 --> 00:07:25,364
+Each call runs the whole flow, including the buyer signature and notarisation.
+
+104
+00:07:25,414 --> 00:07:31,274
+The average was 583 milliseconds, the fastest 391 and the slowest 766.
+
+105
+00:07:31,324 --> 00:07:35,158
+A simple read took only about 78 milliseconds.
+
+106
+00:07:35,208 --> 00:07:40,308
+So the REST layer adds very little; almost all the write time
+
+107
+00:07:40,358 --> 00:07:41,912
+is Corda consensus.
+
+108
+00:07:41,962 --> 00:07:44,360
+Everything ran on one laptop.
+
+109
+00:07:45,110 --> 00:07:49,514
+The big advantage is reach: any system that can send HTTP can
+
+110
+00:07:49,564 --> 00:07:52,726
+now use the ledger, without Corda libraries.
+
+111
+00:07:52,776 --> 00:07:57,472
+The API is documented, validated and secured at the edge, and the
+
+112
+00:07:57,522 --> 00:07:59,662
+ledger guarantees stay intact.
+
+113
+00:07:59,712 --> 00:08:03,824
+On the other hand, one shared API key per node is coarse,
+
+114
+00:08:03,874 --> 00:08:08,934
+write calls wait about half a second for finality, list endpoints have
+
+115
+00:08:08,984 --> 00:08:12,804
+no pagination yet, and I measured on a single laptop.
+
+116
+00:08:13,554 --> 00:08:18,426
+To conclude, I built a complete REST integration for a Corda CorDapp.
+
+117
+00:08:18,476 --> 00:08:23,348
+A contract and four flows protect the invoice lifecycle, and a Spring
+
+118
+00:08:23,398 --> 00:08:28,341
+Boot gateway turns eleven JSON endpoints into flows and vault queries.
+
+119
+00:08:28,391 --> 00:08:32,264
+All forty two tests pass, and a Python ERP ran the full
+
+120
+00:08:32,314 --> 00:08:34,262
+lifecycle on a live network.
+
+121
+00:08:34,312 --> 00:08:39,540
+In future, I would add OAuth2, webhooks or Kafka events, idempotency keys,
+
+122
+00:08:39,590 --> 00:08:41,680
+pagination and Docker Compose.
+
+123
+00:08:42,430 --> 00:08:44,421
+That brings me to the end.
+
+124
+00:08:44,471 --> 00:08:49,603
+All the code, tests, evidence and the Postman collection are in my
+
+125
+00:08:49,653 --> 00:08:56,041
+public GitHub repository, corda rest api integration, under the account Momo-1628.
+
+126
+00:08:56,091 --> 00:09:02,165
+My main references were the Corda 4.12 documentation, the R3 CorDapp template,
+
+127
+00:09:02,215 --> 00:09:05,306
+the Spring Boot reference and springdoc.
+
+128
+00:09:05,356 --> 00:09:07,897
+Thank you very much for watching.
+
+129
+00:09:07,947 --> 00:09:13,628
+I am Suraj Patel, USN 24BTRBT029, and I am happy to answer any questions.

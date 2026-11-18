@@ -1,0 +1,4 @@
+Topic 25 - Implementation of an External REST API Integration with a Corda CorDapp
+Suraj Patel (24BTRBT029) - CSE (Blockchain Technology), Semester V
+
+GitHub repository: https://github.com/Momo-1628/corda-rest-api-integration

@@ -94,3 +94,21 @@ render(c[hist:err], "curl_history.png", "Terminal - curl GET /api/invoices/{line
 lg = read("api_request_log_seller.txt")
 render(["$ tail build/run/api-seller.out.log   (RequestLoggingFilter)", ""] + [l[:150] for l in lg],
        "api_request_log.png", "Seller API - request log")
+
+# 6 compact images for slides
+tests_by_suite = {}
+for l in tests:
+    tests_by_suite.setdefault(l.split(" > ")[0].split(".")[-1], []).append(l)
+compact = [t[0][:62], ""]
+for suite, ls in tests_by_suite.items():
+    compact += [l.replace("com.cordarest.contracts.", "").replace("com.cordarest.flows.", "") for l in ls[:4]]
+    compact += [f"    ... {len(ls)} {suite} tests PASSED", ""]
+compact += [l for l in t if l.startswith("BUILD")] + [""]
+compact += [l[:72] for l in t[summary_start + 4:summary_start + 10]]
+render(compact, "test_summary_slide.png", "gradlew test - summary", max_cols=80)
+
+er = e[cut:]
+hl = [l for l in er[:14] if l.strip()]
+vault_start = next(i for i, l in enumerate(er) if "SellerCorp vault" in l)
+hl += [""] + er[vault_start:vault_start + 8] + [""] + [l for l in er if "RESULT" in l]
+render(hl, "erp_highlights_slide.png", "external_erp_client.py - error cases and final vault", max_cols=110)
